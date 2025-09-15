@@ -1,4 +1,6 @@
 import { LOCALE_REGEX, ValidLocaleString } from "@/config/i18n";
+import { Key } from "@/constants/KEYS";
+import { getCookieClient, setCookieClient } from "@/utils/cookie.utils";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function useI18n() {
@@ -13,15 +15,27 @@ export default function useI18n() {
     );
 
     // Set cookie for middleware to read
-    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Strict`;
+    setCookieClient(Key.CookieI18nSavedLocale, `${newLocale}`, {
+      path: "/",
+      maxAge: 31536000,
+      sameSite: "strict",
+    });
 
     // Navigate to new locale path
     router.push(newPathname);
   }
 
-  function getCurrentLocale() {}
+  function getSavedLocale() {
+    return getCookieClient(Key.CookieI18nSavedLocale);
+  }
+
+  function getCurrentLocale() {
+    return pathname.split("/")[1];
+  }
 
   return {
     switchLanguage,
+    getSavedLocale,
+    getCurrentLocale,
   };
 }

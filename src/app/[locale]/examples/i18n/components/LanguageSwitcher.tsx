@@ -4,7 +4,9 @@ import { LOCALES } from "@/config/i18n"; // or wherever you define ["fa", "en"]
 import useI18n from "@/hooks/useI18n";
 
 export default function LanguageSwitcher() {
-  const { switchLanguage } = useI18n();
+  const { switchLanguage, getCurrentLocale, getSavedLocale } = useI18n();
+  console.log("Saved locale:", getSavedLocale());
+  console.log("Current locale (URL):", getCurrentLocale());
 
   return (
     <div className="flex gap-2 p-2 bg-gray-100 rounded">
