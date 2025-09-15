@@ -1,14 +1,14 @@
-import { ValidLocaleString } from "@/config/i18n";
+import { LOCALE_REGEX, ValidLocaleString } from "@/config/i18n";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function useI18n() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const switchLanguage = (newLocale: ValidLocaleString) => {
+  function switchLanguage(newLocale: ValidLocaleString) {
     // Preserve path but replace locale
     const newPathname = pathname.replace(
-      /^\/(fa|en)/, // match current locale prefix
+      LOCALE_REGEX, // match current locale prefix
       `/${newLocale}`
     );
 
@@ -17,7 +17,9 @@ export default function useI18n() {
 
     // Navigate to new locale path
     router.push(newPathname);
-  };
+  }
+
+  function getCurrentLocale() {}
 
   return {
     switchLanguage,
