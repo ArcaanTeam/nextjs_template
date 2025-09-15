@@ -2,7 +2,6 @@ import {
   DEFAULT_LOCALE,
   isLocaleStringValid,
   LOCALE_REGEX,
-  LOCALES,
   ValidLocaleString,
 } from "@/config/i18n";
 import { Key } from "@/constants/enums";

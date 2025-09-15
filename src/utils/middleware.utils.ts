@@ -8,40 +8,68 @@ import { NextRequest, NextResponse } from "next/server";
 export function i18nPipe(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // ✅ STEP 1: If URL has DEFAULT_LOCALE prefix → REWRITE to clean URL, but internally keep locale
-  if (pathname.startsWith(`/${DEFAULT_LOCALE}/`)) {
-    const newPathname = pathname.replace(`/${DEFAULT_LOCALE}`, ""); // e.g. /fa/about → /about
-    const url = new URL(request.url);
-    url.pathname = newPathname; // User sees this (clean URL)
-    // BUT — internally, we rewrite to /fa/about so Next.js knows the locale
-    return NextResponse.rewrite(
-      new URL(`/${DEFAULT_LOCALE}${newPathname}`, request.url)
+  // ===================================================================
+  // ✅ STEP 0: Finalize clean URL if coming from /[default_locale] redirect
+  //    → Remove flag, update cookie, redirect to clean path
+  // ===================================================================
+  if (request.nextUrl.searchParams.has("__fromDefaultLocale")) {
+    const cleanUrl = new URL(pathname, request.url);
+    const response = NextResponse.redirect(cleanUrl);
+
+    // Override cookie — user explicitly chose default locale
+    response.cookies.set(
+      Key.CookieI18nSavedLocale,
+      DEFAULT_LOCALE,
+      SET_LOCALE_COOKIE_CONFIG
     );
+
+    return response;
   }
 
-  // ✅ STEP 2: If path is exactly /{DEFAULT_LOCALE} → rewrite to / (but internally /fa/)
+  // ===================================================================
+  // ✅ STEP 1: If path starts with /{DEFAULT_LOCALE}/... → redirect to clean URL with flag
+  // ===================================================================
+  if (pathname.startsWith(`/${DEFAULT_LOCALE}/`)) {
+    const newPathname = pathname.replace(`/${DEFAULT_LOCALE}`, "");
+    const url = new URL(newPathname || "/", request.url);
+    url.searchParams.set("__fromDefaultLocale", "1"); // flag for next pass
+    return NextResponse.redirect(url);
+  }
+
+  // ===================================================================
+  // ✅ STEP 2: If path is exactly /{DEFAULT_LOCALE} → redirect to / with flag
+  // ===================================================================
   if (pathname === `/${DEFAULT_LOCALE}`) {
-    return NextResponse.rewrite(new URL(`/${DEFAULT_LOCALE}/`, request.url));
+    const url = new URL("/", request.url);
+    url.searchParams.set("__fromDefaultLocale", "1");
+    return NextResponse.redirect(url);
   }
 
+  // ===================================================================
   // ✅ STEP 3: Check if path already has any valid locale prefix
+  // ===================================================================
   const pathnameHasLocale = LOCALES.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
   if (pathnameHasLocale) {
-    return; // Let Next.js handle it normally
+    return; // Let Next.js handle it
   }
 
-  // ✅ STEP 4: No locale in path? Add user's preferred locale
+  // ===================================================================
+  // ✅ STEP 4: No locale in path → apply user’s preferred locale
+  // ===================================================================
   const [locale, saved] = getLocale(request);
 
-  // 👉 If preferred locale is DEFAULT → rewrite to clean URL (but internally with /fa/...)
+  // -------------------------------------------------------------------
+  // 👉 If preferred locale is DEFAULT → rewrite internally (URL stays clean)
+  // -------------------------------------------------------------------
   if (locale === DEFAULT_LOCALE) {
     const response = NextResponse.rewrite(
       new URL(`/${DEFAULT_LOCALE}${pathname}`, request.url)
     );
 
+    // Only set cookie if not already saved
     if (!saved) {
       response.cookies.set(
         Key.CookieI18nSavedLocale,
@@ -53,7 +81,9 @@ export function i18nPipe(request: NextRequest) {
     return response;
   }
 
+  // -------------------------------------------------------------------
   // 👉 If preferred locale is NOT default → redirect to /en/... etc.
+  // -------------------------------------------------------------------
   const newUrl = new URL(`/${locale}${pathname}`, request.url);
   const response = NextResponse.redirect(newUrl);
 
@@ -68,8 +98,12 @@ export function i18nPipe(request: NextRequest) {
   return response;
 }
 
+// =====================================================================
+// 🧠 Helper: Get user’s preferred locale (cookie > header > default)
+// =====================================================================
 function getLocale(request: NextRequest): [ValidLocaleString, boolean] {
   const savedLocale = request.cookies.get(Key.CookieI18nSavedLocale)?.value;
+
   if (savedLocale && LOCALES.includes(savedLocale as ValidLocaleString)) {
     return [savedLocale as ValidLocaleString, true];
   }
