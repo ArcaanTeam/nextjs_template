@@ -1,13 +1,12 @@
+import { LOCALES } from "@/config/i18n";
 import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import { NextRequest, NextResponse } from "next/server";
 
-let locales = ["fa", "en"];
-
 export function i18nPipe(request: NextRequest) {
   // Check if there is any supported locale in the pathname
   const { pathname } = request.nextUrl;
-  const pathnameHasLocale = locales.some(
+  const pathnameHasLocale = LOCALES.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
@@ -22,6 +21,12 @@ export function i18nPipe(request: NextRequest) {
 }
 
 function getLocale(request: NextRequest) {
+  // Check cookie first
+  const savedLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  if (savedLocale && LOCALES.includes(savedLocale)) {
+    return savedLocale;
+  }
+
   const acceptLanguage = request.headers.get("accept-language") || "";
 
   // Pass it to Negotiator
@@ -29,5 +34,5 @@ function getLocale(request: NextRequest) {
   let languages = new Negotiator({ headers }).languages();
   let defaultLocale = "fa";
 
-  return match(languages, locales, defaultLocale);
+  return match(languages, LOCALES, defaultLocale);
 }
