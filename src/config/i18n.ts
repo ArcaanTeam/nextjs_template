@@ -1,7 +1,9 @@
+// Add or remove locales
 export const LOCALES = ["fa", "ar", "en"] as const;
 export const LOCALE_REGEX = new RegExp(`^\/(${LOCALES.join("|")})`);
 
 export type ValidLocaleString = (typeof LOCALES)[number];
+// Set the default locale
 export const DEFAULT_LOCALE: ValidLocaleString = "fa";
 
 export function isLocaleStringValid(localeString?: string) {

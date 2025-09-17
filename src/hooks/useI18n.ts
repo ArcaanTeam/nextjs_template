@@ -80,8 +80,9 @@ export default function useI18n() {
 
   return {
     changeLocale,
+    locale,
+    // for specific use cases
     getSavedLocale,
     getLocaleFromUrl,
-    locale,
   };
 }
