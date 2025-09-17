@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { i18nPipe } from "@/utils/middleware.utils";
+import nextIntlMiddleware from "@/i18n/middleware";
 
 export function middleware(request: NextRequest) {
-  return i18nPipe(request);
+  return nextIntlMiddleware(request);
 }
 
 export const config = {
