@@ -10,7 +10,7 @@ It demonstrates basic setup, usage, and contribution practices.
 
 ## Features
 
-- i18n example
+- i18n feature using [next-intl](https://next-intl.dev/)
 
 ## Quickstart
 
