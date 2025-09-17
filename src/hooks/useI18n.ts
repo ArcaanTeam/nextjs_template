@@ -33,11 +33,11 @@ export default function useI18n() {
       setLocale(newLocale);
       pushToNewUrl(newLocale);
     },
-    [locale, router]
+    [locale, pushToNewUrl]
   );
 
   function pushToNewUrl(newLocale: string) {
-    const localePrefixCondition = routing.localePrefix as String;
+    const localePrefixCondition = routing.localePrefix as string;
     const currentUrl = new URL(window.location.href);
     const currentLocale = getLocaleFromUrl();
     let newPath: string;
