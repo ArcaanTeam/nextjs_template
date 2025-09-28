@@ -44,6 +44,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* DEFAULT THEME */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -121,5 +122,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button {
+    @apply hover:cursor-pointer;
   }
 }
