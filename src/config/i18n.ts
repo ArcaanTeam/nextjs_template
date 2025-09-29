@@ -3,6 +3,8 @@ import fa from "@/../messages/fa.json";
 
 // Add or remove locales
 export const LOCALES = ["fa", "ar", "en"] as const;
+export type Locales = typeof LOCALES;
+export type Locale = (typeof LOCALES)[number];
 export const RTL_LOCALES = LOCALES.filter((locale) =>
   ["fa", "ar"].includes(locale)
 );

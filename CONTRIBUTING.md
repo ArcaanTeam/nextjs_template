@@ -1,5 +1,9 @@
 # The content of this doc changes for each branch
 
+## TODO
+
+- Check all locales Consistency against default locale as single source of truth for messages.
+
 ## i18n boilerplate
 
 - `./src/config/i18n.ts` single source of truth for internationalization.

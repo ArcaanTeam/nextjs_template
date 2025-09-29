@@ -1,9 +1,9 @@
+import { isLocaleRTL, Locale } from "@/config/i18n";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { isLocaleRTL } from "@/config/i18n";
+import { Geist, Geist_Mono } from "next/font/google";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +20,7 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }) {
-  const messages = (await import(`../../messages/${params.locale}.json`))
+  const messages = (await import(`@/../messages/${params.locale}.json`))
     .default;
   return {
     title: messages.metadata.title,
@@ -37,14 +37,14 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
   const dir = isLocaleRTL(locale) ? "rtl" : "ltr";
-  const messages = await getMessages({ locale });
+  const messages = await getMessages({ locale: locale as Locale });
 
   return (
     <html lang={locale} dir={dir}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider locale={locale as Locale} messages={messages}>
           {children}
         </NextIntlClientProvider>
       </body>
