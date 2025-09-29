@@ -12,8 +12,12 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "./src/i18n/request.ts",
 });
 
-const nextConfig: NextConfig = withNextIntl({
-  /* config options here */
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
 });
+
+const nextConfig: NextConfig = withBundleAnalyzer(withNextIntl({
+  /* config options here */
+}));
 
 export default nextConfig;
