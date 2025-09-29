@@ -1,3 +1,4 @@
+// TODO: merge with existing vitest.config.ts if needed
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
