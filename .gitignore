@@ -40,5 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# next-intl messages declaration files
+# messages declaration files
 messages/*.d.json.ts
+
+# next-intl 
+*storybook.log
+storybook-static
