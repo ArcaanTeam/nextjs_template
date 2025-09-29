@@ -7,7 +7,7 @@ export default function LanguageSwitcher() {
   const { changeLocale, locale } = useI18n();
 
   return (
-    <div className="flex gap-2 p-2 bg-gray-100 rounded">
+    <div className="flex flex-col gap-2 p-2 bg-gray-100 rounded">
       {LOCALES.map(($locale) => (
         <button
           key={$locale}
