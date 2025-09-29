@@ -1,3 +1,4 @@
+import { QueryProvider } from "@/providers/react-query-provider";
 import { Locale, Messages } from "@/config/i18n";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { NextIntlClientProvider } from "next-intl";
@@ -21,7 +22,7 @@ export default function Providers({
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </ThemeProvider>
     </NextIntlClientProvider>
   );
