@@ -1,11 +1,11 @@
-import { DEFAULT_LOCALE, isLocaleStringValid } from "@/config/i18n";
+import { DEFAULT_LOCALE, isLocaleStringValid, Locale } from "@/config/i18n";
 import { Key } from "@/constants/enums";
 import { SET_LOCALE_COOKIE_CONFIG } from "@/constants/frequents";
 import { routing } from "@/i18n/routing";
 import { getCookieClient, setCookieClient } from "@/utils/cookie";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 export default function useI18n() {
   const router = useRouter();
@@ -18,23 +18,20 @@ export default function useI18n() {
    */
   const [locale, setLocale] = useState(local);
 
-  const changeLocale = useCallback(
-    (newLocale: string) => {
-      if (!isLocaleStringValid(newLocale) || newLocale === locale) return;
+  const changeLocale = (newLocale: string) => {
+    if (!isLocaleStringValid(newLocale) || newLocale === locale) return;
 
-      if (typeof window !== "undefined") {
-        setCookieClient(
-          Key.CookieI18nSavedLocale,
-          newLocale,
-          SET_LOCALE_COOKIE_CONFIG
-        );
-      }
+    if (typeof window !== "undefined") {
+      setCookieClient(
+        Key.CookieI18nSavedLocale,
+        newLocale,
+        SET_LOCALE_COOKIE_CONFIG
+      );
+    }
 
-      setLocale(newLocale);
-      pushToNewUrl(newLocale);
-    },
-    [locale, pushToNewUrl]
-  );
+    setLocale(newLocale as Locale);
+    pushToNewUrl(newLocale);
+  };
 
   function pushToNewUrl(newLocale: string) {
     const localePrefixCondition = routing.localePrefix as string;
