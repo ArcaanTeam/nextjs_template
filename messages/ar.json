@@ -1,3 +1,7 @@
 {
-  "welcome": "مرحبا"
+  "welcome": "مرحباً",
+  "metadata": {
+    "title": "قالب Next.js",
+    "description": "تم إنشاؤه بواسطة تطبيق create next app"
+  }
 }

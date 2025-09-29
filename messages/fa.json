@@ -1,3 +1,7 @@
 {
-  "welcome": "خوش آمدید"
+  "welcome": "خوش آمدید",
+  "metadata": {
+    "title": "قالب Next.js",
+    "description": "ایجاد شده توسط اپلیکیشن create next app"
+  }
 }

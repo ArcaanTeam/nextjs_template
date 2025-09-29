@@ -1,3 +1,6 @@
+// Always use the default locale as standard
+import fa from "@/../messages/fa.json";
+
 // Add or remove locales
 export const LOCALES = ["fa", "ar", "en"] as const;
 export const RTL_LOCALES = LOCALES.filter((locale) =>
@@ -17,3 +20,5 @@ export function isLocaleStringValid(localeString?: string) {
 export function isLocaleRTL(localeString: string) {
   return RTL_LOCALES.some((locale) => locale === localeString);
 }
+
+export type Messages = typeof fa;
